@@ -25,27 +25,21 @@ with open('CarParkPos','rb') as f:
 # In[3]:
 
 
-width, height = 55, 34
-
-
-# In[4]:
-
-
 def checkParkingSpace(imgPro):
     
     spaceCounter = 0
     
     for pos in posList:
-        x, y = pos
+        x, y, w, h = pos
         
-        imgCrop = imgPro[y:y+height,x:x+width]
+        imgCrop = imgPro[y:y+h,x:x+w]
         # cv2.imshow("imgCropped",imgCrop)
         cv2.imshow(str(x*y),imgCrop)
         
         # crop된 이미지의 픽셀수를 센다 
         count = cv2.countNonZero(imgCrop)
         # 픽셀수를 지정한 위치에 보여준다, height 뒤 숫자로 위치 조정, scale로 글씨 크기 조정, thickness로 글씨 굵기 조절
-        cvzone.putTextRect(img, str(count), (x,y+height-10), scale = 1, thickness = 1, offset = 0, colorR=(0,0,255))
+        cvzone.putTextRect(img, str(count), (x,y+h-10), scale = 1, thickness = 1, offset = 0, colorR=(0,0,255))
         
         # 픽셀 수에 따라 직사각형 색과 굵기를 변화시켜 있는지 없는지를 표시함
         if count < 400:
@@ -55,7 +49,7 @@ def checkParkingSpace(imgPro):
         else:
             color = (0,0,255)
             thickness = 2
-        cv2.rectangle(img, pos,(pos[0] + width, pos[1] + height),color,2)
+        cv2.rectangle(img,(pos[0], pos[1]),(pos[0] + pos[2], pos[1] + pos[3]),color,2)
     
     # 주차장 남은 자리를 출력하는 부분
     cvzone.putTextRect(img, f'Free: {spaceCounter}/{len(posList)}', (100,50), scale = 3, thickness = 5, offset = 20, colorR=(0,200,0))
@@ -67,7 +61,7 @@ def checkParkingSpace(imgPro):
     p.close()
 
 
-# In[5]:
+# In[4]:
 
 
 while True:
@@ -75,7 +69,13 @@ while True:
     if cap.get(cv2.CAP_PROP_POS_FRAMES) == cap.get(cv2.CAP_PROP_FRAME_COUNT):
         cap.set(cv2.CAP_PROP_POS_FRAMES,0)
     
-    success, img = cap.read()
+    success, img_o = cap.read()
+    (h, w) = img_o.shape[:2]
+    center = (w // 2, h // 2)
+    # 영상의 (center, 각도, 스케일), SpacePicker와 같은 각도와 스케일이어야 함 매우매우 중요
+    M = cv2.getRotationMatrix2D(center, 0, 1)
+    img = cv2.warpAffine(img_o, M, (w, h))
+    
     # 원래 영상의 image를 크롭한 것
     imgGray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     imgBlur = cv2.GaussianBlur(imgGray,(3,3),1)
@@ -108,8 +108,10 @@ while True:
         break
 
 
-# In[6]:
+# cv2.destroyAllWindows()
+
+# In[ ]:
 
 
-cv2.destroyAllWindows()
+
 
