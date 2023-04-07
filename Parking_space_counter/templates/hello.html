@@ -1,0 +1,33 @@
+<!-- html 선언 -->
+<!DOCTYPE html>
+<!-- 언어를 영어로 선언 -->
+<html lang="en">
+    <head>
+        <!-- <meta> 태그의 charset 속성은 해당 HTML 문서의 문자 인코딩 방식을 명시-->
+        <meta charset="UTF-8" />
+        <!-- meta 태그의 http-equiv 속성은 HTTP 헤더에 정보 또는 값을 제공하는 content 속성이다.-->
+        <!-- 여기에서는 어떤 브라우저로 개발했는지를 지정 여기서는 edge 브라우저이다.-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- 메타데이터를 정의함, 여기에서는 모든 장치에서 잘 보일수 있도록 veiwport를 설정함-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- 웹페이지의 제목을 설정 -->
+        <title>Parking Space System</title>
+		<!-- 웹페이지를 5초 마다 새로고침 -->
+        <meta http-equiv="refresh" content="5">
+        <link rel="stylesheet" href=" {{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <style>
+        body {
+            background-image: url('https://ifh.cc/g/FnXM9v.jpg');
+        }
+    </style>
+
+    <p>
+        <span class="ball_645 lrg ball1">{{ space }}/{{ total }}</span>
+        <span class="ball_645 lrg ball3">N/A</span>
+        <span class="ball_645 lrg ball4">N/A</span>
+        <span class="ball_645 lrg ball5">N/A</span>
+		<span class="ball_645 lrg ball6">N/A</span>
+    </p>
+</html>
